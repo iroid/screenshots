@@ -60,9 +60,9 @@ dev_dependencies:
 
 dependency_overrides:
   tool_mobile:
-    path: ../../tool_mobile
+    git: https://github.com/iroid/tool_mobile
   tool_base:
-    path: ../../tool_base
+    git: https://github.com/iroid/tool_base
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

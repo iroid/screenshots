@@ -15,7 +15,7 @@ typedef ContextInitializer = void Function(AppContext testContext);
 @isTest
 void testUsingContext(
   String description,
-    dynamic Function() testMethod, {
+  dynamic Function() testMethod, {
   Timeout? timeout,
   Map<Type, Generator> overrides = const <Type, Generator>{},
   bool initializeFlutterRoot = true,
@@ -27,15 +27,13 @@ void testUsingContext(
   Directory? configDir;
   tearDown(() {
     if (configDir != null) {
-      tryToDelete(configDir);
+      // tryToDelete(configDir);
       configDir = null;
     }
   });
   Config buildConfig(FileSystem fs) {
-    configDir =
-        fs.systemTempDirectory.createTempSync('flutter_config_dir_test.');
-    final settingsFile =
-        fs.file(fs.path.join(configDir!.path, '.flutter_settings'));
+    configDir = fs.systemTempDirectory.createTempSync('flutter_config_dir_test.');
+    final settingsFile = fs.file(fs.path.join(configDir!.path, '.flutter_settings'));
     return Config(settingsFile);
   }
 
@@ -55,7 +53,7 @@ void testUsingContext(
         body: () {
 //          final String flutterRoot = getFlutterRoot();
 
-          return runZoned<Future<dynamic>>(() {
+          return runZonedGuarded<Future<dynamic>>(() {
             try {
               return context.run<dynamic>(
                 // Apply the overrides to the test context in the zone since their
@@ -76,7 +74,7 @@ void testUsingContext(
 //              _printBufferedErrors(context);
               rethrow;
             }
-          }, onError: (dynamic error, StackTrace stackTrace) {
+          }, (dynamic error, StackTrace stackTrace) {
             stdout.writeln(error);
             stdout.writeln(stackTrace);
 //            _printBufferedErrors(context);
@@ -85,10 +83,7 @@ void testUsingContext(
         },
       );
     });
-  },
-      timeout: timeout ?? const Timeout(Duration(seconds: 60)),
-      testOn: testOn,
-      skip: skip);
+  }, timeout: timeout ?? const Timeout(Duration(seconds: 60)), testOn: testOn, skip: skip);
 }
 
 class MockOperatingSystemUtils implements OperatingSystemUtils {
